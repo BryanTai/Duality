@@ -75,3 +75,4 @@ DerivedDataCache/*
 
 # Jetbrains Rider settings
 .idea/
+Plugins/Developer/RiderLink/*
