@@ -11,6 +11,15 @@ class ADualityGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
+	TSubclassOf<class UUserWidget> MainHUDClass;
+
+	UPROPERTY()
+	class UUserWidget* ActiveWidget;
+	
+	virtual void BeginPlay() override;
+
 public:
 	ADualityGameMode();
 };
