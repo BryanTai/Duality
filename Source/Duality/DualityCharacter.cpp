@@ -82,6 +82,8 @@ ADualityCharacter::ADualityCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	RapidFireDelay = 0.1f;
 }
 
 void ADualityCharacter::BeginPlay()
@@ -118,7 +120,8 @@ void ADualityCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	// Bind fire event
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ADualityCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ADualityCharacter::StartRapidFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ADualityCharacter::EndRapidFire);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -138,8 +141,19 @@ void ADualityCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ADualityCharacter::LookUpAtRate);
 }
 
+void ADualityCharacter::StartRapidFire()
+{
+	GetWorld()->GetTimerManager().SetTimer(RapidFireTimerHandle, this, &ADualityCharacter::OnFire, RapidFireDelay, true, 0);
+}
+
+void ADualityCharacter::EndRapidFire()
+{
+	GetWorld()->GetTimerManager().ClearTimer(RapidFireTimerHandle);
+}
+
 void ADualityCharacter::OnFire()
 {
+	// UE_LOG(LogConfig, Warning, TEXT("FIRING!!"));
 	// try and fire a projectile
 	if (ProjectileClass != nullptr)
 	{

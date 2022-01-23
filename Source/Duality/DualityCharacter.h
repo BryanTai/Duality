@@ -86,7 +86,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+	float RapidFireDelay;
+
 protected:
+
+	void StartRapidFire();
+
+	void EndRapidFire();
 	
 	/** Fires a projectile. */
 	void OnFire();
@@ -124,6 +131,8 @@ protected:
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
+
+	FTimerHandle RapidFireTimerHandle;
 	
 protected:
 	// APawn interface
