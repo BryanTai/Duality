@@ -2,8 +2,19 @@
 
 #include "DualityGameMode.h"
 #include "DualityHUD.h"
-#include "DualityCharacter.h"
+#include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
+
+void ADualityGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if(MainHUDClass)
+	{
+		ActiveWidget = CreateWidget<UUserWidget>(AActor::GetWorld(), MainHUDClass);
+		ActiveWidget->AddToViewport();
+	}
+}
 
 ADualityGameMode::ADualityGameMode()
 	: Super()
