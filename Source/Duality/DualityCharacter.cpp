@@ -171,7 +171,9 @@ void ADualityCharacter::OnFire()
 	// try and play the sound if specified
 	if (FireSound != nullptr)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		// I've turned down the volume as not to kill our eardrums.
+		// Feel free to adjust the volume float for new VFX -Bryan
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), 0.1f);
 	}
 
 	// try and play a firing animation if specified
