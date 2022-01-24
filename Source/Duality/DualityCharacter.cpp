@@ -84,6 +84,7 @@ ADualityCharacter::ADualityCharacter()
 	//bUsingMotionControllers = true;
 
 	RapidFireDelay = 0.1f;
+	CurrentHeatLevel = 0;
 }
 
 void ADualityCharacter::BeginPlay()
@@ -105,6 +106,9 @@ void ADualityCharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
+
+	CurrentHeatDecayAmount = RegularHeatDecayAmount;
+	StartHeatDecay();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -141,6 +145,32 @@ void ADualityCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	PlayerInputComponent->BindAxis("LookUpRate", this, &ADualityCharacter::LookUpAtRate);
 }
 
+void ADualityCharacter::UpdateCurrentHeatLevel(float Amount)
+{
+	CurrentHeatLevel += Amount;
+
+	if(CurrentHeatLevel > OverheatLimitAmount)
+	{
+		IsOverheated = true;
+		CurrentHeatDecayAmount = OverheatDecayAmount;
+	}
+	else if (CurrentHeatLevel <= 0)
+	{
+		if(IsOverheated)
+		{
+			IsOverheated = false;
+			CurrentHeatDecayAmount = RegularHeatDecayAmount;
+		}
+		
+		CurrentHeatLevel = 0;
+	}
+}
+
+float ADualityCharacter::GetCurrentHeatLevel() const
+{
+	return CurrentHeatLevel;
+}
+
 void ADualityCharacter::StartRapidFire()
 {
 	GetWorld()->GetTimerManager().SetTimer(RapidFireTimerHandle, this, &ADualityCharacter::OnFire, RapidFireDelay, true, 0);
@@ -151,9 +181,31 @@ void ADualityCharacter::EndRapidFire()
 	GetWorld()->GetTimerManager().ClearTimer(RapidFireTimerHandle);
 }
 
+void ADualityCharacter::StartHeatDecay()
+{
+	GetWorld()->GetTimerManager().SetTimer(HeatDecayTimerHandle, this, &ADualityCharacter::HeatDecayEvent, HeatDecayTime, true);
+}
+
+void ADualityCharacter::HeatDecayEvent()
+{
+	UpdateCurrentHeatLevel(-CurrentHeatDecayAmount);
+}
+
 void ADualityCharacter::OnFire()
 {
 	// UE_LOG(LogConfig, Warning, TEXT("FIRING!!"));
+
+	if(IsOverheated) { return; }
+
+	ShootProjectile();
+
+	UpdateCurrentHeatLevel(HeatGainedOnShot);
+	
+}
+
+//This is the default ShootProjectile code -Bryan
+void ADualityCharacter::ShootProjectile()
+{
 	// try and fire a projectile
 	if (ProjectileClass != nullptr)
 	{

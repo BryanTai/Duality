@@ -86,18 +86,65 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
+#pragma region GUN
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gun)
 	float RapidFireDelay;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
+	float HeatGainedOnShot;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
+	float HeatDecayTime;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
+	float RegularHeatDecayAmount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
+	float OverheatLimitAmount;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
+	float OverheatDecayAmount;
+	
+	UPROPERTY(VisibleAnywhere, Category = Gun)
+	float CurrentHeatLevel;
+	
+	UPROPERTY(VisibleAnywhere, Category = Gun)
+	float CurrentHeatDecayAmount;
+
+	UFUNCTION(BlueprintCallable, Category = Gun)
+	void UpdateCurrentHeatLevel(float Amount);
+	
+	UFUNCTION(BlueprintPure, Category = Gun)
+	float GetCurrentHeatLevel() const;
+
+	bool IsOverheated;
 
 protected:
 
 	void StartRapidFire();
 
 	void EndRapidFire();
+
+	void StartHeatDecay();
+	void HeatDecayEvent();
 	
-	/** Fires a projectile. */
 	void OnFire();
 
+	FTimerHandle RapidFireTimerHandle;
+	
+	FTimerHandle HeatDecayTimerHandle;
+
+private:
+	/** Fires a projectile. */
+	void ShootProjectile();
+
+	
+
+#pragma endregion
+
+protected:
+	
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
 
@@ -132,7 +179,6 @@ protected:
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
 
-	FTimerHandle RapidFireTimerHandle;
 	
 protected:
 	// APawn interface
