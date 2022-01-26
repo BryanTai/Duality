@@ -74,6 +74,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class ADualityProjectile> ProjectileClass;
 
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class ADualityBomb> BombClass;
+
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	USoundBase* FireSound;
@@ -130,6 +133,8 @@ protected:
 	void HeatDecayEvent();
 	
 	void OnFire();
+
+	void OnBomb();
 
 	FTimerHandle RapidFireTimerHandle;
 	
