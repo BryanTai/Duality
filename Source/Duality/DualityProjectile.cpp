@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DualityProjectile.h"
+
+#include "EnemyHealth.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -37,7 +39,16 @@ void ADualityProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) //&& OtherComp->IsSimulatingPhysics())
 	{
+		UE_LOG(LogConfig, Warning, TEXT("FIRING!!"));
 		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		TArray<UEnemyHealth*> EnemyHealthComponents;
+		OtherActor->GetComponents(EnemyHealthComponents);
+		if(EnemyHealthComponents.Num() > 0)
+		{
+			UE_LOG(LogConfig, Warning, TEXT("DAMAGING!!"));
+			UEnemyHealth* EnemyHealth = EnemyHealthComponents[0];
+			EnemyHealth->OnHitEvent(DamageAmount);
+		}
 
 		Destroy();
 	}

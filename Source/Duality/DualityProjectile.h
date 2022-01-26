@@ -23,6 +23,9 @@ class ADualityProjectile : public AActor
 	UProjectileMovementComponent* ProjectileMovement;
 
 public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=Damage)
+	int DamageAmount;
 	ADualityProjectile();
 
 	/** called when projectile hits something */
