@@ -1,18 +1,23 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "DualityProjectile.h"
+
+#include "DualityBomb.h"
 
 #include "EnemyHealth.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
-ADualityProjectile::ADualityProjectile() 
+// Sets default values
+ADualityBomb::ADualityBomb()
 {
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	//PrimaryActorTick.bCanEverTick = true;
+
+
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-	CollisionComp->InitSphereRadius(5.0f);
+	CollisionComp->InitSphereRadius(60.0f);
 	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
-	CollisionComp->OnComponentHit.AddDynamic(this, &ADualityProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
 	// Players can't walk on it
 	CollisionComp->SetWalkableSlopeOverride(FWalkableSlopeOverride(WalkableSlope_Unwalkable, 0.f));
@@ -34,20 +39,42 @@ ADualityProjectile::ADualityProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
-void ADualityProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+// Called when the game starts or when spawned
+void ADualityBomb::BeginPlay()
 {
+	Super::BeginPlay();
+	CollisionComp->OnComponentHit.AddDynamic(this, &ADualityBomb::OnHit);		// set up a notification for when this component hits something blocking
+	
+}
+
+void ADualityBomb::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogConfig, Warning, TEXT("FIRING BOMB!!"));
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) //&& OtherComp->IsSimulatingPhysics())
 	{
+
+		//TODO: Check all Actors in a radius and adjust their EnemyHealth components
+		
 		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		TArray<UEnemyHealth*> EnemyHealthComponents;
 		OtherActor->GetComponents(EnemyHealthComponents);
 		if(EnemyHealthComponents.Num() > 0)
 		{
+			UE_LOG(LogConfig, Warning, TEXT("DAMAGING!!"));
 			UEnemyHealth* EnemyHealth = EnemyHealthComponents[0];
 			EnemyHealth->OnHitEvent(DamageAmount);
 		}
-
+		UE_LOG(LogConfig, Warning, TEXT("DESTROYING BOMB!!"));
 		Destroy();
 	}
 }
+
+// Called every frame
+// void ADualityBomb::Tick(float DeltaTime)
+// {
+// 	Super::Tick(DeltaTime);
+//
+// }
+

@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DualityCharacter.h"
+
+#include "DualityBomb.h"
 #include "DualityProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -85,6 +87,7 @@ ADualityCharacter::ADualityCharacter()
 
 	RapidFireDelay = 0.1f;
 	CurrentHeatLevel = 0;
+	OverheatLimitAmount = 100.0f;
 }
 
 void ADualityCharacter::BeginPlay()
@@ -126,6 +129,9 @@ void ADualityCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerI
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ADualityCharacter::StartRapidFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ADualityCharacter::EndRapidFire);
+
+	// Bind bomb event
+	PlayerInputComponent->BindAction("Bomb", IE_Pressed, this, &ADualityCharacter::OnBomb);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -201,6 +207,59 @@ void ADualityCharacter::OnFire()
 
 	UpdateCurrentHeatLevel(HeatGainedOnShot);
 	
+}
+
+//TODO: Consolidate this function with ShootProjectile
+void ADualityCharacter::OnBomb()
+{
+	//UE_LOG(LogConfig, Warning, TEXT("BOMBING!!"));
+
+	// try and fire a projectile
+	if (BombClass != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			if (bUsingMotionControllers)
+			{
+				const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+				const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+				World->SpawnActor<ADualityBomb>(BombClass, SpawnLocation, SpawnRotation);
+			}
+			else
+			{
+				const FRotator SpawnRotation = GetControlRotation();
+				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+				//Set Spawn Collision Handling Override
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+				// spawn the projectile at the muzzle
+				World->SpawnActor<ADualityBomb>(BombClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			}
+		}
+	}
+
+	// try and play the sound if specified
+	if (FireSound != nullptr)
+	{
+		// I've turned down the volume as not to kill our eardrums.
+		// Feel free to adjust the volume float for new VFX -Bryan
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), 0.1f);
+	}
+
+	// try and play a firing animation if specified
+	if (FireAnimation != nullptr)
+	{
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.f);
+		}
+	}
 }
 
 //This is the default ShootProjectile code -Bryan
