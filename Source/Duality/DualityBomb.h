@@ -37,7 +37,10 @@ protected:
 public:
 
 	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	void OnHit(AActor* OtherActor);
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyOnHitToActorsInRadius(TArray<AActor*> OtherActors);
 
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;

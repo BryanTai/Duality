@@ -43,31 +43,30 @@ ADualityBomb::ADualityBomb()
 void ADualityBomb::BeginPlay()
 {
 	Super::BeginPlay();
-	CollisionComp->OnComponentHit.AddDynamic(this, &ADualityBomb::OnHit);		// set up a notification for when this component hits something blocking
 	
 }
 
-void ADualityBomb::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	FVector NormalImpulse, const FHitResult& Hit)
+void ADualityBomb::OnHit(AActor* OtherActor)
 {
-	UE_LOG(LogConfig, Warning, TEXT("FIRING BOMB!!"));
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) //&& OtherComp->IsSimulatingPhysics())
+	if ((OtherActor != nullptr) && (OtherActor != this))
 	{
-
-		//TODO: Check all Actors in a radius and adjust their EnemyHealth components
-		
-		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		TArray<UEnemyHealth*> EnemyHealthComponents;
 		OtherActor->GetComponents(EnemyHealthComponents);
 		if(EnemyHealthComponents.Num() > 0)
 		{
-			UE_LOG(LogConfig, Warning, TEXT("DAMAGING!!"));
 			UEnemyHealth* EnemyHealth = EnemyHealthComponents[0];
 			EnemyHealth->OnHitEvent(DamageAmount);
 		}
-		UE_LOG(LogConfig, Warning, TEXT("DESTROYING BOMB!!"));
-		Destroy();
+	}
+}
+
+void ADualityBomb::ApplyOnHitToActorsInRadius(TArray<AActor*> OtherActors)
+{
+	UE_LOG(LogConfig, Warning, TEXT("APPLYING HIT TO ALL ACTORS!! Other Actors: %d"), OtherActors.Num());
+	
+	for (auto OtherActor : OtherActors)
+	{
+		OnHit(OtherActor);
 	}
 }
 
