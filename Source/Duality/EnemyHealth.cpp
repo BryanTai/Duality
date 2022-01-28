@@ -3,6 +3,9 @@
 
 #include "EnemyHealth.h"
 
+#include "DualityGameMode.h"
+#include "KillCountComponent.h"
+
 // Sets default values for this component's properties
 UEnemyHealth::UEnemyHealth()
 {
@@ -31,8 +34,14 @@ void UEnemyHealth::OnHitEvent(int DamageTaken)
 
 void UEnemyHealth::TriggerDeath()
 {
+	UKillCountComponent* KillCounter = static_cast<UKillCountComponent*>(GetWorld()->GetAuthGameMode()->
+		GetComponentByClass(UKillCountComponent::StaticClass()));
+	
 	AActor* ParentActor = Cast<AActor>(GetOwner());
 	UE_LOG(LogConfig, Warning, TEXT("Enemy %s destroyed!"), *ParentActor->GetName());
+
+	KillCounter->AddKillCount();
+	
 	ParentActor->Destroy();
 }
 
