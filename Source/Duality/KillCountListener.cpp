@@ -36,9 +36,12 @@ void AKillCountListener::BeginPlay()
 	
 }
 
-void AKillCountListener::TriggerKillCountEvent()
+void AKillCountListener::Notify(int NewKillCount)
 {
-	ToggleActive(false);
+	if(NewKillCount >= KillCountThreshold)
+	{
+		ToggleActive(false);
+	}
 }
 
 // Called every frame

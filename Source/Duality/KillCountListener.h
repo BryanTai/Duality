@@ -34,6 +34,6 @@ protected:
 public:	
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
-	virtual void TriggerKillCountEvent();
+	virtual void Notify(int NewKillCount);
 
 };

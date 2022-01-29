@@ -3,6 +3,8 @@
 
 #include "KillCountDoor.h"
 
+#include <string>
+
 // Sets default values
 AKillCountDoor::AKillCountDoor()
 {
@@ -15,15 +17,33 @@ AKillCountDoor::AKillCountDoor()
 void AKillCountDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//TODO: Get reference to Text component
+	if(TextComponent == nullptr)
+	{
+		TextComponent = Cast<UTextRenderComponent>(GetComponentByClass(UTextRenderComponent::StaticClass()));
+	}
+
+	UpdateNumberDisplay(KillCountThreshold);
 }
 
-void AKillCountDoor::TriggerKillCountEvent()
+void AKillCountDoor::Notify(int NewKillCount)
 {
-	Super::TriggerKillCountEvent();
+	Super::Notify(NewKillCount);
 
-	//TODO: Open the door
-	UE_LOG(LogConfig, Warning, TEXT("DOOR IS OPEN!"));
+	const int KillsRemaining = KillCountThreshold - NewKillCount;
+	UpdateNumberDisplay(KillsRemaining);
+	
+	if(KillsRemaining <= 0)
+	{
+		//TODO: Open the door
+		UE_LOG(LogConfig, Warning, TEXT("DOOR IS OPEN!"));
+	}
+}
+
+void AKillCountDoor::UpdateNumberDisplay(int NumberToDisplay) const
+{
+	TextComponent->SetText(FText::AsNumber(NumberToDisplay));
 }
 
 // Called every frame

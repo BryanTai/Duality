@@ -50,9 +50,9 @@ void UKillCountComponent::NotifyListeners()
 	for (const auto Listener : Listeners)
 	{
 		AKillCountListener* CastListener = Cast<AKillCountListener>(Listener);
-		if( CastListener->GetIsActive() && KillCount >= CastListener->GetKillCountThreshold())
+		if( CastListener->GetIsActive())
 		{
-			CastListener->TriggerKillCountEvent();
+			CastListener->Notify(KillCount);
 		}
 	}
 }
