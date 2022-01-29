@@ -181,6 +181,11 @@ float ADualityCharacter::GetCurrentHeatLevel() const
 	return CurrentHeatLevel;
 }
 
+float ADualityCharacter::GetOverheatLimitAmount() const
+{
+	return OverheatLimitAmount;
+}
+
 bool ADualityCharacter::GetIsOverheated() const
 {
 	return IsOverheated;
