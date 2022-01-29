@@ -181,6 +181,11 @@ float ADualityCharacter::GetCurrentHeatLevel() const
 	return CurrentHeatLevel;
 }
 
+bool ADualityCharacter::GetIsOverheated() const
+{
+	return IsOverheated;
+}
+
 void ADualityCharacter::StartRapidFire()
 {
 	GetWorld()->GetTimerManager().SetTimer(RapidFireTimerHandle, this, &ADualityCharacter::OnFire, RapidFireDelay, true, 0);

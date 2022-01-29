@@ -130,6 +130,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = Gun)
 	float GetCurrentHeatLevel() const;
 
+	UFUNCTION(BlueprintPure, Category = Gun)
+	bool GetIsOverheated() const;
+	
 	bool IsOverheated;
 
 protected:
