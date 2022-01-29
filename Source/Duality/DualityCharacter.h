@@ -98,6 +98,9 @@ public:
 	float HeatGainedOnShot;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
+	float HeatGainedOnBomb;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
 	float HeatDecayTime;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Gun)
