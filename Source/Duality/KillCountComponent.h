@@ -18,8 +18,11 @@ public:
 	// Sets default values for this component's properties
 	UKillCountComponent();
 
+	UFUNCTION(BlueprintCallable)
 	void AddKillCount();
+	UFUNCTION(BlueprintCallable)
 	void SetKillCount(int newCount);
+	UFUNCTION(BlueprintPure)
 	int GetKillCount();
 
 protected:

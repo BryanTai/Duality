@@ -37,7 +37,7 @@ void UEnemyHealth::TriggerDeath()
 	UKillCountComponent* KillCounter = static_cast<UKillCountComponent*>(GetWorld()->GetAuthGameMode()->
 		GetComponentByClass(UKillCountComponent::StaticClass()));
 	
-	AActor* ParentActor = Cast<AActor>(GetOwner());
+	AActor* ParentActor = GetOwner();
 	UE_LOG(LogConfig, Warning, TEXT("Enemy %s destroyed!"), *ParentActor->GetName());
 
 	KillCounter->AddKillCount();
