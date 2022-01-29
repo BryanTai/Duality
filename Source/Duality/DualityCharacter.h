@@ -90,6 +90,12 @@ public:
 	uint8 bUsingMotionControllers : 1;
 
 #pragma region GUN
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gun)
+	float ProjectileFireVolumeMultiplier;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gun)
+	float BombFireVolumeMultiplier;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gun)
 	float RapidFireDelay;
