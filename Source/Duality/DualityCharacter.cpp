@@ -159,6 +159,7 @@ void ADualityCharacter::UpdateCurrentHeatLevel(float Amount)
 	{
 		IsOverheated = true;
 		CurrentHeatDecayAmount = OverheatDecayAmount;
+		CurrentHeatLevel = OverheatLimitAmount;
 	}
 	else if (CurrentHeatLevel <= 0)
 	{
@@ -260,6 +261,8 @@ void ADualityCharacter::OnBomb()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+
+	UpdateCurrentHeatLevel(HeatGainedOnBomb);
 }
 
 //This is the default ShootProjectile code -Bryan
