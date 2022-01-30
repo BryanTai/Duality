@@ -141,6 +141,12 @@ public:
 	UFUNCTION(BlueprintPure)
 	UUserWidget* GetActiveWidgetHUD();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnOverheatTrigger();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnOverheatReset();
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
