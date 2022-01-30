@@ -14,6 +14,7 @@
 #include "MotionControllerComponent.h"
 #include "PlayerHealth.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -98,6 +99,12 @@ void ADualityCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	if(MainHUDClass)
+	{
+		ActiveWidget = CreateWidget<UUserWidget>(GetWorld(), MainHUDClass);
+		ActiveWidget->AddToViewport();
+	}
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));

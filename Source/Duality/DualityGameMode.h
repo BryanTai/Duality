@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DualityCharacter.h"
 #include "GameFramework/GameModeBase.h"
 #include "DualityGameMode.generated.h"
 
@@ -24,6 +25,9 @@ protected:
 #pragma endregion
 
 public:
+	// UFUNCTION(BlueprintCallable)
+	// ADualityCharacter* GetPlayerDualityCharacter();
+	
 	ADualityGameMode();
 };
 

@@ -9,12 +9,17 @@ void ADualityGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if(MainHUDClass)
-	{
-		ActiveWidget = CreateWidget<UUserWidget>(AActor::GetWorld(), MainHUDClass);
-		ActiveWidget->AddToViewport();
-	}
+	// if(MainHUDClass)
+	// {
+	// 	ActiveWidget = CreateWidget<UUserWidget>(AActor::GetWorld(), MainHUDClass);
+	// 	ActiveWidget->AddToViewport();
+	// }
 }
+
+// ADualityCharacter* ADualityGameMode::GetPlayerDualityCharacter()
+// {
+// 	//GetWorld().GetCont
+// }
 
 ADualityGameMode::ADualityGameMode()
 	: Super()
