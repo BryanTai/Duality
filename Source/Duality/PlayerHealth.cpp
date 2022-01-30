@@ -4,7 +4,6 @@
 #include "PlayerHealth.h"
 
 #include "EnemyDamage.h"
-#include "EnemyHealth.h"
 
 // Sets default values for this component's properties
 UPlayerHealth::UPlayerHealth()
@@ -15,7 +14,12 @@ UPlayerHealth::UPlayerHealth()
 
 	// ...
 	MaxHealth = 3;
-	InvincibilityOnDamageSeconds = 3;
+	IsInvincible = false;
+}
+
+int UPlayerHealth::GetCurrentHealth()
+{
+	return CurrentHealth;
 }
 
 
@@ -27,27 +31,45 @@ void UPlayerHealth::BeginPlay()
 	CapsuleCollider = Cast<UCapsuleComponent>( GetOwner()->GetComponentByClass(UCapsuleComponent::StaticClass()));
 
 	CurrentHealth = MaxHealth;
+	InvincibilityDurationSeconds = 3.0f;
 }
 
 void UPlayerHealth::OnHit(AActor* OtherActor)
 {
-	//TODO
+	if(IsInvincible)
+	{
+		UE_LOG(LogConfig, Warning, TEXT("IsInvincible is TRUE, hit IGNORED"));
+		return;
+	}
+	
 	UE_LOG(LogConfig, Warning, TEXT("Player has been HIT by %s"), *OtherActor->GetName());
 
 	UEnemyDamage* EnemyDamageComponent = Cast<UEnemyDamage>(OtherActor->GetComponentByClass(UEnemyDamage::StaticClass()));
 
 	if(EnemyDamageComponent != nullptr)
 	{
-		int DamageTaken = EnemyDamageComponent->GetEnemyDamageAmount();
-		//TODO: Message the GameMode!
-		//TODO: GO invincible for a bit!
+		const int DamageTaken = EnemyDamageComponent->GetEnemyDamageAmount();
+		CurrentHealth -= DamageTaken;
+		UE_LOG(LogConfig, Warning, TEXT("Player takes damage! Current Health is now %d"), CurrentHealth);
+		IsInvincible = true;
+
+		FTimerHandle InvincibilityTimerHandle;
+
+		GetWorld()->GetTimerManager().SetTimer(
+			InvincibilityTimerHandle,
+			this,
+			&UPlayerHealth::DisableInvincibility,
+			InvincibilityDurationSeconds,
+			false,
+			InvincibilityDurationSeconds
+			);
 	}
 }
 
-void UPlayerHealth::OnOverlap(AActor* OtherActor)
+void UPlayerHealth::DisableInvincibility()
 {
-	//TODO
-	UE_LOG(LogConfig, Warning, TEXT("Player has COLLIDED with %s"), *OtherActor->GetName());
+	IsInvincible = false;
+	UE_LOG(LogConfig, Warning, TEXT("IsInvincible DISABLED"));
 }
 
 

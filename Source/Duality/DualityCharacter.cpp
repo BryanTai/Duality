@@ -12,6 +12,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
+#include "PlayerHealth.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -329,6 +330,17 @@ void ADualityCharacter::ShootProjectile()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+int ADualityCharacter::GetCurrentHealth()
+{
+	UPlayerHealth* PlayerHealth = Cast<UPlayerHealth>(GetComponentByClass(UPlayerHealth::StaticClass()));
+
+	if(PlayerHealth != nullptr)
+	{
+		return PlayerHealth->GetCurrentHealth();
+	}
+	return -1;
 }
 
 void ADualityCharacter::OnResetVR()
