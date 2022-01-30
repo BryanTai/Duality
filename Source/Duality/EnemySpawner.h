@@ -17,13 +17,22 @@ public:
 	AEnemySpawner();
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
-	TSubclassOf<AActor> ActorToSpawn;
+	TSubclassOf<AActor> ChaseActor;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> FlyingActor;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> JumpActor;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> ShootActor;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
 	class UCapsuleComponent* CapsuleComponent;
 
 	UFUNCTION()
-	void SpawnObject(FVector CurrentLoc, int Team);
+	void SpawnObject(FVector CurrentLoc, FString EnemyType );
 
 
 protected:

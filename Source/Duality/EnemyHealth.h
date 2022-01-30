@@ -25,17 +25,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TriggerDamage();
 
-	UFUNCTION(BlueprintCallable, Category = Team)
-	void SwapTeam(int NewTeam);
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=Health)
 	int StartingHealth;
 
 	UPROPERTY(VisibleAnywhere, Category=Health)
 	int CurrentHealth;
-
-	UPROPERTY(EditAnywhere, Category = Team)
-	int CurrentTeam;
 
 
 
