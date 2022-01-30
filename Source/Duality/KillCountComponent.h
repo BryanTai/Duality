@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "KillCountDoor.h"
 #include "KillCountListener.h"
 #include "Components/SceneComponent.h"
 #include "KillCountComponent.generated.h"
@@ -24,6 +25,8 @@ public:
 	void SetKillCount(int newCount);
 	UFUNCTION(BlueprintPure)
 	int GetKillCount();
+	UFUNCTION(BlueprintCallable)
+	void ResetKillCount();
 
 protected:
 	// Called when the game starts
@@ -33,8 +36,11 @@ protected:
 	int KillCount;
 
 	TArray<AActor*> Listeners;
+	AKillCountDoor* CurrentActiveDoor;
+	int CurrentActiveDoorIndex;
 
 private:	
 	void NotifyListeners();
+	void UpdateActiveDoor();
 		
 };

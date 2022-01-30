@@ -9,16 +9,20 @@
 AKillCountDoor::AKillCountDoor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	//PrimaryActorTick.bCanEverTick = true;
+	DoorIndex = 0;
+}
 
+int AKillCountDoor::GetDoorIndex()
+{
+	return DoorIndex;
 }
 
 // Called when the game starts or when spawned
 void AKillCountDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//TODO: Get reference to Text component
+	
 	if(TextComponent == nullptr)
 	{
 		TextComponent = Cast<UTextRenderComponent>(GetComponentByClass(UTextRenderComponent::StaticClass()));
@@ -27,9 +31,9 @@ void AKillCountDoor::BeginPlay()
 	UpdateNumberDisplay(KillCountThreshold);
 }
 
-void AKillCountDoor::Notify(int NewKillCount)
+bool AKillCountDoor::Notify(int NewKillCount)
 {
-	Super::Notify(NewKillCount);
+	const bool HasHitThreshold = Super::Notify(NewKillCount);
 
 	const int KillsRemaining = KillCountThreshold - NewKillCount;
 	UpdateNumberDisplay(KillsRemaining);
@@ -38,7 +42,10 @@ void AKillCountDoor::Notify(int NewKillCount)
 	{
 		//TODO: Open the door
 		UE_LOG(LogConfig, Warning, TEXT("DOOR IS OPEN!"));
+		TriggerOpenDoor();
 	}
+
+	return HasHitThreshold;
 }
 
 void AKillCountDoor::UpdateNumberDisplay(int NumberToDisplay) const

@@ -27,22 +27,37 @@ void AEnemySpawner::Tick(float DeltaTime)
 
 }
 
-void AEnemySpawner::SpawnObject(FVector CurrentLoc, int Team)
+void AEnemySpawner::SpawnObject(FVector CurrentLoc, FString EnemyType)
 {
-	FVector NewLocation;
-	if (Team == 0)
-	{
-		NewLocation = FVector((CurrentLoc.X + 10860),CurrentLoc.Y,CurrentLoc.Z);
-	}
-	else
-	{
-		NewLocation = FVector((CurrentLoc.X - 10860), CurrentLoc.Y,CurrentLoc.Z);
-	}
-	FActorSpawnParameters SpawnParams;
-	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, NewLocation, GetActorRotation(), SpawnParams);
 	
-	UEnemyHealth* EnemyHealthComponent = Cast<UEnemyHealth>(SpawnedActorRef->GetComponentByClass(UEnemyHealth::StaticClass()));
-	EnemyHealthComponent->SwapTeam(Team);
+	FActorSpawnParameters SpawnParams;
+
+
+	if (EnemyType == "BP_ChaseNPC_C")
+	{
+		AActor* SpawnedActorRef_1 = GetWorld()->SpawnActor<AActor>(ChaseActor, CurrentLoc, GetActorRotation(), SpawnParams);
+		AActor* SpawnedActorRef_2 = GetWorld()->SpawnActor<AActor>(ChaseActor, CurrentLoc, GetActorRotation(), SpawnParams);
+	}
+	else if (EnemyType == "BP_FlyingNPC_C")
+	{
+		AActor* SpawnedActorRef_1 = GetWorld()->SpawnActor<AActor>(FlyingActor, CurrentLoc, GetActorRotation(), SpawnParams);
+		AActor* SpawnedActorRef_2 = GetWorld()->SpawnActor<AActor>(FlyingActor, CurrentLoc, GetActorRotation(), SpawnParams);
+	}
+	else if (EnemyType == "BP_JumpNPC_C")
+	{
+		AActor* SpawnedActorRef_1 = GetWorld()->SpawnActor<AActor>(JumpActor, CurrentLoc, GetActorRotation(), SpawnParams);
+		AActor* SpawnedActorRef_2 = GetWorld()->SpawnActor<AActor>(JumpActor, CurrentLoc, GetActorRotation(), SpawnParams);
+	}
+	else if (EnemyType == "BP_ShootNPC_C")
+	{
+		AActor* SpawnedActorRef_1 = GetWorld()->SpawnActor<AActor>(ShootActor, CurrentLoc, GetActorRotation(), SpawnParams);
+		AActor* SpawnedActorRef_2 = GetWorld()->SpawnActor<AActor>(ShootActor, CurrentLoc, GetActorRotation(), SpawnParams);
+	}
+
+
+	UE_LOG(LogConfig, Warning, TEXT("Spawning %s enemy"), *EnemyType);
+	//UEnemyHealth* EnemyHealthComponent = Cast<UEnemyHealth>(SpawnedActorRef->GetComponentByClass(UEnemyHealth::StaticClass()));
+	//EnemyHealthComponent->SwapTeam(Team);
 
 }
 

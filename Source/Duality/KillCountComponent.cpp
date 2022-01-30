@@ -15,6 +15,7 @@ UKillCountComponent::UKillCountComponent()
 	// ...
 
 	KillCount = 0;
+	CurrentActiveDoorIndex = -1;
 }
 
 void UKillCountComponent::AddKillCount()
@@ -34,6 +35,11 @@ int UKillCountComponent::GetKillCount()
 	return KillCount;
 }
 
+void UKillCountComponent::ResetKillCount()
+{
+	KillCount = 0;
+}
+
 
 // Called when the game starts
 void UKillCountComponent::BeginPlay()
@@ -43,17 +49,50 @@ void UKillCountComponent::BeginPlay()
 	// Find all KillCountListeners and cache them
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKillCountListener::StaticClass(), Listeners);
 	UE_LOG(LogConfig, Warning, TEXT("There are %d KillCountListener(s)"), Listeners.Num());
+
+	UpdateActiveDoor();
+	
 }
 
 void UKillCountComponent::NotifyListeners()
 {
+	// for (const auto Listener : Listeners)
+	// {
+	// 	AKillCountListener* CastListener = Cast<AKillCountListener>(Listener);
+	// 	if( CastListener->GetIsActive())
+	// 	{
+	// 		CastListener->Notify(KillCount);
+	// 	}
+	// }
+
+	if(CurrentActiveDoor != nullptr && CurrentActiveDoor->GetIsActive())
+	{
+		bool DoorIsActive = CurrentActiveDoor->Notify(KillCount);
+		if(!DoorIsActive)
+		{
+			UpdateActiveDoor();
+			ResetKillCount();
+		}
+	}
+}
+
+void UKillCountComponent::UpdateActiveDoor()
+{
+	CurrentActiveDoorIndex++;
+	
 	for (const auto Listener : Listeners)
 	{
-		AKillCountListener* CastListener = Cast<AKillCountListener>(Listener);
-		if( CastListener->GetIsActive())
+		AKillCountDoor* Door = Cast<AKillCountDoor>(Listener);
+		if(Door->GetDoorIndex() == CurrentActiveDoorIndex)
 		{
-			CastListener->Notify(KillCount);
+			CurrentActiveDoor = Door;
+			return;
 		}
+	}
+
+	if(CurrentActiveDoor != nullptr)
+	{
+		CurrentActiveDoor->ToggleActive(true);
 	}
 }
 
