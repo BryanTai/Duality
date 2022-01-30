@@ -30,13 +30,13 @@ void AEnemySpawner::Tick(float DeltaTime)
 void AEnemySpawner::SpawnObject(FVector CurrentLoc, int Team)
 {
 	FVector NewLocation;
-	if (Team == 1)
+	if (Team == 0)
 	{
-		NewLocation = FVector(CurrentLoc.X,CurrentLoc.Y,(CurrentLoc.Z + 300));
+		NewLocation = FVector((CurrentLoc.X + 10860),CurrentLoc.Y,CurrentLoc.Z);
 	}
 	else
 	{
-		NewLocation = FVector(CurrentLoc.X, CurrentLoc.Y,CurrentLoc.Z);
+		NewLocation = FVector((CurrentLoc.X - 10860), CurrentLoc.Y,CurrentLoc.Z);
 	}
 	FActorSpawnParameters SpawnParams;
 	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, NewLocation, GetActorRotation(), SpawnParams);
