@@ -3,6 +3,7 @@
 
 #include "PlayerHealth.h"
 
+#include "DualityCharacter.h"
 #include "EnemyDamage.h"
 
 // Sets default values for this component's properties
@@ -34,12 +35,13 @@ void UPlayerHealth::BeginPlay()
 	InvincibilityDurationSeconds = 3.0f;
 }
 
-void UPlayerHealth::OnHit(AActor* OtherActor)
+// Returns true if the player takes damage
+bool UPlayerHealth::OnHit(AActor* OtherActor)
 {
 	if(IsInvincible)
 	{
 		UE_LOG(LogConfig, Warning, TEXT("IsInvincible is TRUE, hit IGNORED"));
-		return;
+		return false;
 	}
 	
 	UE_LOG(LogConfig, Warning, TEXT("Player has been HIT by %s"), *OtherActor->GetName());
@@ -48,28 +50,50 @@ void UPlayerHealth::OnHit(AActor* OtherActor)
 
 	if(EnemyDamageComponent != nullptr)
 	{
-		const int DamageTaken = EnemyDamageComponent->GetEnemyDamageAmount();
-		CurrentHealth -= DamageTaken;
-		UE_LOG(LogConfig, Warning, TEXT("Player takes damage! Current Health is now %d"), CurrentHealth);
-		IsInvincible = true;
+		if(CurrentHealth > 0)
+		{
+			TriggerDamage();
+			return true;
+		}
 
-		FTimerHandle InvincibilityTimerHandle;
-
-		GetWorld()->GetTimerManager().SetTimer(
-			InvincibilityTimerHandle,
-			this,
-			&UPlayerHealth::DisableInvincibility,
-			InvincibilityDurationSeconds,
-			false,
-			InvincibilityDurationSeconds
-			);
+		TriggerDeath();
 	}
+
+	return false;
 }
 
 void UPlayerHealth::DisableInvincibility()
 {
 	IsInvincible = false;
 	UE_LOG(LogConfig, Warning, TEXT("IsInvincible DISABLED"));
+}
+
+void UPlayerHealth::TriggerDamage()
+{
+	CurrentHealth--;
+	UE_LOG(LogConfig, Warning, TEXT("Player takes damage! Current Health is now %d"), CurrentHealth);
+	IsInvincible = true;
+
+	FTimerHandle InvincibilityTimerHandle;
+
+	GetWorld()->GetTimerManager().SetTimer(
+		InvincibilityTimerHandle,
+		this,
+		&UPlayerHealth::DisableInvincibility,
+		InvincibilityDurationSeconds,
+		false,
+		InvincibilityDurationSeconds
+		);
+	//TODO: Flash some UI stuff
+}
+
+void UPlayerHealth::TriggerDeath()
+{
+	//TODO: Game Over!
+	UE_LOG(LogConfig, Warning, TEXT("Player is DEAD!"));
+
+	ADualityCharacter* PlayerCharacter = Cast<ADualityCharacter>( GetOwner());
+	//PlayerCharacter->InputEnabled()
 }
 
 

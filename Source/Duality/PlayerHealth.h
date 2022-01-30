@@ -44,8 +44,10 @@ public:
 	//virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
-	void OnHit(AActor* OtherActor);
+	bool OnHit(AActor* OtherActor);
 
 private:
 	void DisableInvincibility();
+	void TriggerDamage();
+	void TriggerDeath();
 };

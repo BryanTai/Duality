@@ -138,6 +138,9 @@ public:
 	
 	bool IsOverheated;
 
+	UFUNCTION(BlueprintPure)
+	UUserWidget* GetActiveWidgetHUD();
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")

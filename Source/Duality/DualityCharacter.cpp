@@ -199,6 +199,11 @@ bool ADualityCharacter::GetIsOverheated() const
 	return IsOverheated;
 }
 
+UUserWidget* ADualityCharacter::GetActiveWidgetHUD()
+{
+	return ActiveWidget;
+}
+
 void ADualityCharacter::StartRapidFire()
 {
 	GetWorld()->GetTimerManager().SetTimer(RapidFireTimerHandle, this, &ADualityCharacter::OnFire, RapidFireDelay, true, 0);
