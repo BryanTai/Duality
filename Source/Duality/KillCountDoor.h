@@ -16,9 +16,18 @@ public:
 	// Sets default values for this actor's properties
 	AKillCountDoor();
 
+	UFUNCTION(BlueprintPure)
+	int GetDoorIndex();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void TriggerOpenDoor();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=KillCount)
+	int DoorIndex;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=KillCount)
 	UTextRenderComponent* TextComponent;
@@ -26,7 +35,7 @@ protected:
 public:	
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
-	virtual void Notify(int NewKillCount) override;
+	virtual bool Notify(int NewKillCount) override;
 
 private:
 	void UpdateNumberDisplay(int NumberToDisplay) const;

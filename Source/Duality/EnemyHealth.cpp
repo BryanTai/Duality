@@ -44,8 +44,6 @@ void UEnemyHealth::TriggerDeath()
 	UE_LOG(LogConfig, Warning, TEXT("Enemy %s destroyed!"), *ParentActor->GetName());
 
 	KillCounter->AddKillCount();
-	
-	UE_LOG(LogConfig, Warning, TEXT("team %d"), CurrentTeam);
 
 	ParentActor->Destroy();
 
@@ -61,24 +59,14 @@ void UEnemyHealth::TriggerDeath()
 		AEnemySpawner* EnemySpawnerCast = Cast<AEnemySpawner>(EnemySpawnerActor);
 		if (EnemySpawnerCast)
 		{
-			int newTeam;
-			if (CurrentTeam == 0)
-			{
-				newTeam = 1;
-			}
-			else
-			{
-				newTeam = 0;
-			}
-			EnemySpawnerCast->SpawnObject(GetOwner()->GetActorLocation(), newTeam);
+			FTimerDelegate TimerDel;
+			FTimerHandle TimerHandle;
+			TimerDel.BindUFunction(EnemySpawnerCast, FName("SpawnObject"), GetOwner()->GetActorLocation(), ParentActor->GetClass()->GetName());
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 5.f, false);
+			
 		}
 	}
 
-}
-
-void UEnemyHealth::SwapTeam(int NewTeam)
-{
-	CurrentTeam = NewTeam;
 }
 
 void UEnemyHealth::TriggerDamage()
