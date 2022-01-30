@@ -2,6 +2,8 @@
 
 
 #include "EnemyHealth.h"
+#include "EnemySpawner.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "DualityGameMode.h"
 #include "KillCountComponent.h"
@@ -16,6 +18,7 @@ UEnemyHealth::UEnemyHealth()
 	// ...
 
 	StartingHealth = 3;
+
 }
 
 void UEnemyHealth::OnHitEvent(int DamageTaken)
@@ -42,7 +45,40 @@ void UEnemyHealth::TriggerDeath()
 
 	KillCounter->AddKillCount();
 	
+	UE_LOG(LogConfig, Warning, TEXT("team %d"), CurrentTeam);
+
 	ParentActor->Destroy();
+
+	TArray<AActor*> ActorsToFind;
+	if (UWorld* World = GetWorld())
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawner::StaticClass(), ActorsToFind);
+	}
+	for (AActor* EnemySpawnerActor : ActorsToFind)
+
+	{
+		//Is this Actor of type Enemyspawner class?
+		AEnemySpawner* EnemySpawnerCast = Cast<AEnemySpawner>(EnemySpawnerActor);
+		if (EnemySpawnerCast)
+		{
+			int newTeam;
+			if (CurrentTeam == 0)
+			{
+				newTeam = 1;
+			}
+			else
+			{
+				newTeam = 0;
+			}
+			EnemySpawnerCast->SpawnObject(GetOwner()->GetActorLocation(), newTeam);
+		}
+	}
+
+}
+
+void UEnemyHealth::SwapTeam(int NewTeam)
+{
+	CurrentTeam = NewTeam;
 }
 
 void UEnemyHealth::TriggerDamage()

@@ -162,8 +162,11 @@ private:
 	
 
 #pragma endregion
-
 protected:
+	UFUNCTION(BlueprintCallable)
+	int GetCurrentHealth();
+
+
 	
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();

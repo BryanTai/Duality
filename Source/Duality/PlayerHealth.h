@@ -17,6 +17,9 @@ public:
 	// Sets default values for this component's properties
 	UPlayerHealth();
 
+	UFUNCTION(BlueprintCallable, Category=Health)
+	int GetCurrentHealth();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -27,8 +30,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category=Health)
 	int CurrentHealth;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=Health)
-	int InvincibilityOnDamageSeconds;
+	UPROPERTY(EditDefaultsOnly, Category=Health)
+	float InvincibilityDurationSeconds;
+	
+	UPROPERTY(VisibleAnywhere, Category=Health)
+	bool IsInvincible;
 
 	UPROPERTY(VisibleDefaultsOnly, Category=Collider)
 	UCapsuleComponent* CapsuleCollider;
@@ -39,6 +45,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void OnHit(AActor* OtherActor);
-	UFUNCTION(BlueprintCallable)
-	void OnOverlap(AActor* OtherActor);
+
+private:
+	void DisableInvincibility();
 };
