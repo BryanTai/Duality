@@ -88,6 +88,9 @@ ADualityCharacter::ADualityCharacter()
 	RapidFireDelay = 0.1f;
 	CurrentHeatLevel = 0;
 	OverheatLimitAmount = 100.0f;
+
+	ProjectileFireVolumeMultiplier = 0.1f;
+	BombFireVolumeMultiplier = 0.1f;
 }
 
 void ADualityCharacter::BeginPlay()
@@ -178,6 +181,16 @@ float ADualityCharacter::GetCurrentHeatLevel() const
 	return CurrentHeatLevel;
 }
 
+float ADualityCharacter::GetOverheatLimitAmount() const
+{
+	return OverheatLimitAmount;
+}
+
+bool ADualityCharacter::GetIsOverheated() const
+{
+	return IsOverheated;
+}
+
 void ADualityCharacter::StartRapidFire()
 {
 	GetWorld()->GetTimerManager().SetTimer(RapidFireTimerHandle, this, &ADualityCharacter::OnFire, RapidFireDelay, true, 0);
@@ -213,6 +226,8 @@ void ADualityCharacter::OnFire()
 //TODO: Consolidate this function with ShootProjectile
 void ADualityCharacter::OnBomb()
 {
+	if(IsOverheated) { return; }
+	
 	//UE_LOG(LogConfig, Warning, TEXT("BOMBING!!"));
 
 	// try and fire a projectile
@@ -248,7 +263,7 @@ void ADualityCharacter::OnBomb()
 	{
 		// I've turned down the volume as not to kill our eardrums.
 		// Feel free to adjust the volume float for new VFX -Bryan
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), 0.1f);
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), BombFireVolumeMultiplier);
 	}
 
 	// try and play a firing animation if specified
@@ -301,7 +316,7 @@ void ADualityCharacter::ShootProjectile()
 	{
 		// I've turned down the volume as not to kill our eardrums.
 		// Feel free to adjust the volume float for new VFX -Bryan
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), 0.1f);
+		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), ProjectileFireVolumeMultiplier);
 	}
 
 	// try and play a firing animation if specified

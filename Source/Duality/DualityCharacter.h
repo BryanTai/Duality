@@ -90,6 +90,12 @@ public:
 	uint8 bUsingMotionControllers : 1;
 
 #pragma region GUN
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gun)
+	float ProjectileFireVolumeMultiplier;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gun)
+	float BombFireVolumeMultiplier;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gun)
 	float RapidFireDelay;
@@ -123,7 +129,13 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category = Gun)
 	float GetCurrentHeatLevel() const;
+	
+	UFUNCTION(BlueprintPure, Category = Gun)
+	float GetOverheatLimitAmount() const;
 
+	UFUNCTION(BlueprintPure, Category = Gun)
+	bool GetIsOverheated() const;
+	
 	bool IsOverheated;
 
 protected:
