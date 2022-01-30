@@ -147,6 +147,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOverheatReset();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDeath();
+	
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
