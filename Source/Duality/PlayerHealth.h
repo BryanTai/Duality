@@ -50,4 +50,5 @@ private:
 	void DisableInvincibility();
 	void TriggerDamage();
 	void TriggerDeath();
+	bool IsDead;
 };

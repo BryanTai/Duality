@@ -16,6 +16,7 @@ UPlayerHealth::UPlayerHealth()
 	// ...
 	MaxHealth = 3;
 	IsInvincible = false;
+	IsDead = false;
 }
 
 int UPlayerHealth::GetCurrentHealth()
@@ -40,11 +41,10 @@ bool UPlayerHealth::OnHit(AActor* OtherActor)
 {
 	if(IsInvincible)
 	{
-		UE_LOG(LogConfig, Warning, TEXT("IsInvincible is TRUE, hit IGNORED"));
 		return false;
 	}
 	
-	UE_LOG(LogConfig, Warning, TEXT("Player has been HIT by %s"), *OtherActor->GetName());
+	//UE_LOG(LogConfig, Warning, TEXT("Player has been HIT by %s"), *OtherActor->GetName());
 
 	UEnemyDamage* EnemyDamageComponent = Cast<UEnemyDamage>(OtherActor->GetComponentByClass(UEnemyDamage::StaticClass()));
 
@@ -65,7 +65,6 @@ bool UPlayerHealth::OnHit(AActor* OtherActor)
 void UPlayerHealth::DisableInvincibility()
 {
 	IsInvincible = false;
-	UE_LOG(LogConfig, Warning, TEXT("IsInvincible DISABLED"));
 }
 
 void UPlayerHealth::TriggerDamage()
@@ -90,10 +89,12 @@ void UPlayerHealth::TriggerDamage()
 void UPlayerHealth::TriggerDeath()
 {
 	//TODO: Game Over!
+	if (IsDead) {return;}
 	UE_LOG(LogConfig, Warning, TEXT("Player is DEAD!"));
 
 	ADualityCharacter* PlayerCharacter = Cast<ADualityCharacter>( GetOwner());
-	//PlayerCharacter->InputEnabled()
+	PlayerCharacter->OnDeath();
+	IsDead = true;
 }
 
 
