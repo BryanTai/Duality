@@ -18,6 +18,7 @@ UEnemyHealth::UEnemyHealth()
 	// ...
 
 	StartingHealth = 3;
+
 }
 
 void UEnemyHealth::OnHitEvent(int DamageTaken)
@@ -44,6 +45,8 @@ void UEnemyHealth::TriggerDeath()
 
 	KillCounter->AddKillCount();
 	
+	UE_LOG(LogConfig, Warning, TEXT("team %d"), CurrentTeam);
+
 	ParentActor->Destroy();
 
 	TArray<AActor*> ActorsToFind;
@@ -58,10 +61,24 @@ void UEnemyHealth::TriggerDeath()
 		AEnemySpawner* EnemySpawnerCast = Cast<AEnemySpawner>(EnemySpawnerActor);
 		if (EnemySpawnerCast)
 		{
-			EnemySpawnerCast->SpawnObject();
+			int newTeam;
+			if (CurrentTeam == 0)
+			{
+				newTeam = 1;
+			}
+			else
+			{
+				newTeam = 0;
+			}
+			EnemySpawnerCast->SpawnObject(GetOwner()->GetActorLocation(), newTeam);
 		}
 	}
 
+}
+
+void UEnemyHealth::SwapTeam(int NewTeam)
+{
+	CurrentTeam = NewTeam;
 }
 
 void UEnemyHealth::TriggerDamage()

@@ -3,9 +3,9 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class DualityCientTarget : TargetRules
+public class DualityClientTarget : TargetRules
 {
-	public DualityCientTarget(TargetInfo Target) : base(Target)
+	public DualityClientTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Client;
 		DefaultBuildSettings = BuildSettingsVersion.V2;

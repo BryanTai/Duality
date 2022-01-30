@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EnemyHealth.h"
 #include "EnemySpawner.generated.h"
 
 UCLASS()
@@ -22,7 +23,7 @@ public:
 	class UCapsuleComponent* CapsuleComponent;
 
 	UFUNCTION()
-	void SpawnObject();
+	void SpawnObject(FVector CurrentLoc, int Team);
 
 
 protected:

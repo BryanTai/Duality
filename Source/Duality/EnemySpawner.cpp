@@ -18,7 +18,6 @@ void AEnemySpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnObject();
 }
 
 // Called every frame
@@ -28,10 +27,22 @@ void AEnemySpawner::Tick(float DeltaTime)
 
 }
 
-void AEnemySpawner::SpawnObject()
+void AEnemySpawner::SpawnObject(FVector CurrentLoc, int Team)
 {
+	FVector NewLocation;
+	if (Team == 1)
+	{
+		NewLocation = FVector(CurrentLoc.X,CurrentLoc.Y,(CurrentLoc.Z + 300));
+	}
+	else
+	{
+		NewLocation = FVector(CurrentLoc.X, CurrentLoc.Y,CurrentLoc.Z);
+	}
 	FActorSpawnParameters SpawnParams;
-	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, GetActorLocation(), GetActorRotation(), SpawnParams);
+	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ActorToSpawn, NewLocation, GetActorRotation(), SpawnParams);
+	
+	UEnemyHealth* EnemyHealthComponent = Cast<UEnemyHealth>(SpawnedActorRef->GetComponentByClass(UEnemyHealth::StaticClass()));
+	EnemyHealthComponent->SwapTeam(Team);
 
 }
 
