@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/Image.h"
 #include "GameFramework/GameModeBase.h"
 #include "DualityGameMode.generated.h"
 
@@ -19,6 +20,9 @@ protected:
 
 	UPROPERTY()
 	class UUserWidget* ActiveWidget;
+
+	UFUNCTION(BlueprintImplementableEvent, Category=MyImage)
+	UImage* GetMyImage() const;
 #pragma endregion
 
 	virtual void BeginPlay() override;

@@ -3,6 +3,9 @@
 
 #include "PlayerHealth.h"
 
+#include "EnemyDamage.h"
+#include "EnemyHealth.h"
+
 // Sets default values for this component's properties
 UPlayerHealth::UPlayerHealth()
 {
@@ -12,7 +15,7 @@ UPlayerHealth::UPlayerHealth()
 
 	// ...
 	MaxHealth = 3;
-	
+	InvincibilityOnDamageSeconds = 3;
 }
 
 
@@ -30,6 +33,15 @@ void UPlayerHealth::OnHit(AActor* OtherActor)
 {
 	//TODO
 	UE_LOG(LogConfig, Warning, TEXT("Player has been HIT by %s"), *OtherActor->GetName());
+
+	UEnemyDamage* EnemyDamageComponent = Cast<UEnemyDamage>(OtherActor->GetComponentByClass(UEnemyDamage::StaticClass()));
+
+	if(EnemyDamageComponent != nullptr)
+	{
+		int DamageTaken = EnemyDamageComponent->GetEnemyDamageAmount();
+		//TODO: Message the GameMode!
+		//TODO: GO invincible for a bit!
+	}
 }
 
 void UPlayerHealth::OnOverlap(AActor* OtherActor)
