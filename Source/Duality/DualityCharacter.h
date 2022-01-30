@@ -140,6 +140,12 @@ public:
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
+	TSubclassOf<class UUserWidget> MainHUDClass;
+
+	UPROPERTY()
+	class UUserWidget* ActiveWidget;
+
 	void StartRapidFire();
 
 	void EndRapidFire();
