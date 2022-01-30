@@ -22,10 +22,10 @@ public:
 	bool GetIsActive();
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=KillCount)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=KillCount)
 	int KillCountThreshold;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=KillCount)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category=KillCount)
 	bool IsActive;
 	
 	// Called when the game starts or when spawned
@@ -34,6 +34,6 @@ protected:
 public:	
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
-	virtual void Notify(int NewKillCount);
+	virtual bool Notify(int NewKillCount);
 
 };
