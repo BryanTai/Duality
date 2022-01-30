@@ -2,6 +2,8 @@
 
 
 #include "EnemyHealth.h"
+#include "EnemySpawner.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "DualityGameMode.h"
 #include "KillCountComponent.h"
@@ -43,6 +45,23 @@ void UEnemyHealth::TriggerDeath()
 	KillCounter->AddKillCount();
 	
 	ParentActor->Destroy();
+
+	TArray<AActor*> ActorsToFind;
+	if (UWorld* World = GetWorld())
+	{
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawner::StaticClass(), ActorsToFind);
+	}
+	for (AActor* EnemySpawnerActor : ActorsToFind)
+
+	{
+		//Is this Actor of type Enemyspawner class?
+		AEnemySpawner* EnemySpawnerCast = Cast<AEnemySpawner>(EnemySpawnerActor);
+		if (EnemySpawnerCast)
+		{
+			EnemySpawnerCast->SpawnObject();
+		}
+	}
+
 }
 
 void UEnemyHealth::TriggerDamage()
