@@ -29,6 +29,9 @@ public:
 	TSubclassOf<AActor> ShootActor;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning")
+	TSubclassOf<AActor> AngelActor;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning")
 	class UCapsuleComponent* CapsuleComponent;
 
 	UFUNCTION()

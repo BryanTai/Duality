@@ -53,7 +53,11 @@ void AEnemySpawner::SpawnObject(FVector CurrentLoc, FString EnemyType)
 		AActor* SpawnedActorRef_1 = GetWorld()->SpawnActor<AActor>(ShootActor, CurrentLoc, GetActorRotation(), SpawnParams);
 		AActor* SpawnedActorRef_2 = GetWorld()->SpawnActor<AActor>(ShootActor, CurrentLoc, GetActorRotation(), SpawnParams);
 	}
-
+	else if (EnemyType == "BP_AngelBall_C")
+	{
+		AActor* SpawnedActorRef_1 = GetWorld()->SpawnActor<AActor>(AngelActor, CurrentLoc, GetActorRotation(), SpawnParams);
+		AActor* SpawnedActorRef_2 = GetWorld()->SpawnActor<AActor>(AngelActor, CurrentLoc, GetActorRotation(), SpawnParams);
+	}
 
 	UE_LOG(LogConfig, Warning, TEXT("Spawning %s enemy"), *EnemyType);
 	//UEnemyHealth* EnemyHealthComponent = Cast<UEnemyHealth>(SpawnedActorRef->GetComponentByClass(UEnemyHealth::StaticClass()));
