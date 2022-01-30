@@ -171,6 +171,7 @@ void ADualityCharacter::UpdateCurrentHeatLevel(float Amount)
 		IsOverheated = true;
 		CurrentHeatDecayAmount = OverheatDecayAmount;
 		CurrentHeatLevel = OverheatLimitAmount;
+		OnOverheatTrigger();
 	}
 	else if (CurrentHeatLevel <= 0)
 	{
@@ -178,6 +179,7 @@ void ADualityCharacter::UpdateCurrentHeatLevel(float Amount)
 		{
 			IsOverheated = false;
 			CurrentHeatDecayAmount = RegularHeatDecayAmount;
+			OnOverheatReset();
 		}
 		
 		CurrentHeatLevel = 0;
