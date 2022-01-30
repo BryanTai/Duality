@@ -26,6 +26,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category=Health)
 	int CurrentHealth;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category=Health)
+	int InvincibilityOnDamageSeconds;
 
 	UPROPERTY(VisibleDefaultsOnly, Category=Collider)
 	UCapsuleComponent* CapsuleCollider;
